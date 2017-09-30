@@ -69,7 +69,28 @@ public interface IGraphFile extends IFile
      * @param out the output stream
      */
     public abstract void exportToPdf(OutputStream out);
+    
+    /**
+     * Exports the current graph to a XMI file.
+     * 
+     * @param out
+     */
+    public void exportToXMI(OutputStream out);
 
+    /**
+     * Exports the current graph to a PHP file.
+     * 
+     * @param out
+     */
+    public void exportToPHP(OutputStream out);
+    
+    /**
+     * Exports the current graph to a Java file.
+     * 
+     * @param out
+     */
+    public void exportToJava(OutputStream out);
+    
     /**
      * Prints the graph
      * 

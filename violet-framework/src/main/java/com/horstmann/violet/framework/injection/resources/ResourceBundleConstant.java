@@ -32,6 +32,8 @@ public abstract class ResourceBundleConstant
     public static final String NODE_AND_EDGE_STRINGS = "properties.NodeAndEdgeStrings";
     public static final String EDITOR_STRINGS = "properties.EditorStrings";
 
+    public static final String XSL_FILES = "properties.XSLFiles";
+    
     public static final ResourceBundle NODE_AND_EDGE_RESOURCE = ResourceBundle.getBundle(NODE_AND_EDGE_STRINGS, Locale.getDefault());
     public static final ResourceBundle EDITOR_RESOURCE = ResourceBundle.getBundle(EDITOR_STRINGS, Locale.getDefault());
     public static final ResourceBundle FILE_RESOURCE = ResourceBundle.getBundle(FILE_STRINGS, Locale.getDefault());

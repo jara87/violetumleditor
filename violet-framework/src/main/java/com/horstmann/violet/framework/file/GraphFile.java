@@ -300,6 +300,33 @@ public class GraphFile implements IGraphFile
     {
         FileExportService.exportToPdf(graph, out);
     }
+    
+    /**
+     * 
+     */
+    @Override
+    public void exportToXMI(OutputStream out)
+    {
+        FileExportService.exportToXMI(graph, out);
+    }
+    
+    /**
+     * 
+     */
+    @Override
+    public void exportToPHP(OutputStream out)
+    {
+        FileExportService.exportToXMI(graph, out);
+    }
+    
+    /**
+     * 
+     */
+    @Override
+    public void exportToJava(OutputStream out)
+    {
+        FileExportService.exportToXMI(graph, out);
+    }
 
     @Override
     public void exportToPrinter()

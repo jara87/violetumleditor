@@ -45,4 +45,11 @@ public class ClassDiagramGraph extends AbstractGraph
             new CompositionEdge(),
             new NoteEdge()
     ));
+    
+    /**
+     * Make ClassDiagram graph XMI exportable.
+     */
+    public boolean isXMIExportable() {
+    	return true;
+    }
 }

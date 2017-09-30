@@ -19,17 +19,17 @@
     
     <!-- *************************************************************************************** -->
 	<!--                                                                                         -->
-    <!-- Java template definition                                                                -->
+    <!-- PHP template definition                                                                 -->
     <!--                                                                                         -->
     <!-- *************************************************************************************** -->
     
-    <xsl:variable name="primitive_types">^(int|float|double|boolean|void)$</xsl:variable>
+    <xsl:variable name="primitive_types">^(string|int|integer|float|double|boolean|void)$</xsl:variable>
     
 	<!-- file name template -->
 	<xsl:template name="file_name">
 		<xsl:param name="path" />
 		<xsl:param name="name" />
-		<xsl:value-of select="concat($path, $name, '.java')" />
+		<xsl:value-of select="concat($path, $name, '.php')" />
 	</xsl:template>
 	
 	
@@ -42,12 +42,14 @@
         <xsl:param name="copyright"    />
         <xsl:param name="url"          />
         
-		<xsl:text>&nl;</xsl:text>
+		<xsl:text>&lt;?php&nl;</xsl:text>
+        <xsl:text>&nl;</xsl:text>
         <xsl:text>/**&nl;</xsl:text>
         <xsl:text> * </xsl:text><xsl:value-of select="$class_name" /><xsl:text>&nl;</xsl:text>
         <xsl:text> *&nl;</xsl:text>
         <xsl:text> * </xsl:text><xsl:value-of select="$description" /><xsl:text>&nl;</xsl:text>
         <xsl:text> *&nl;</xsl:text>
+        <xsl:text> * PHP version 7&nl;</xsl:text>
         <xsl:text> *&nl;</xsl:text>
         <xsl:text> * LICENSE: This program is free software: you can redistribute it and/or modify&nl;</xsl:text>
         <xsl:text> * it under the terms of the GNU General Public License as published by&nl;</xsl:text>
@@ -73,15 +75,15 @@
 	
     <!-- file footer -->
 	<xsl:template name="file_footer">
-		<xsl:text>&nl;&nl;</xsl:text>
+		<xsl:text>&nl;&nl;?&gt;</xsl:text>
 	</xsl:template>
     
     <!-- package definition -->
     <xsl:template name="package_definition">
         <xsl:param name="package_name" />
         <xsl:if test="not($package_name eq '')">
-            <xsl:text>package </xsl:text><xsl:value-of 
-                select="substring(translate($package_name, '/', '.'), 1, string-length($package_name) - 1)" 
+            <xsl:text>namespace </xsl:text><xsl:value-of 
+                select="substring(translate($package_name, '/', '\'), 1, string-length($package_name) - 1)" 
             /><xsl:text>;&nl;</xsl:text>
         </xsl:if>
     </xsl:template>
@@ -91,7 +93,7 @@
         <xsl:param name="classes" />
         <xsl:if test="not($classes eq '')">
             <xsl:for-each select="tokenize($classes,', ?')">
-                <xsl:text>import </xsl:text><xsl:value-of select="translate(., '/', '.')"/>
+                <xsl:text>use </xsl:text><xsl:value-of select="translate(., '/', '\')"/>
                 <xsl:text>;&nl;</xsl:text>
             </xsl:for-each>
         </xsl:if>
@@ -154,16 +156,15 @@
         <xsl:call-template name="applyDescription">
             <xsl:with-param name="description" select="$description" />
         </xsl:call-template>
+        <xsl:if test="not($type eq '')">
+            <xsl:text>     * @var </xsl:text><xsl:value-of select="$type" /><xsl:text>&nl;</xsl:text>
+        </xsl:if>
         <xsl:text>     */&nl;</xsl:text>
         <xsl:text>    </xsl:text>
         <xsl:if test="not($visibility eq '')">
             <xsl:value-of select="$visibility" /><xsl:text> </xsl:text>
         </xsl:if>
-        <xsl:call-template name="applyType">
-            <xsl:with-param name="type" select="$type" />
-        </xsl:call-template>
-        <xsl:text> </xsl:text>
-        <xsl:value-of select="$name" />
+        <xsl:text>$</xsl:text><xsl:value-of select="$name" />
         <xsl:text>;&nl;</xsl:text>
 	</xsl:template>
 	
@@ -193,11 +194,7 @@
         <xsl:text>    </xsl:text>
         <xsl:if test="$abstract = 'true'"><xsl:text>abstract </xsl:text></xsl:if>
         <xsl:value-of select="$visibility" />
-        <xsl:text> </xsl:text>
-        <xsl:call-template name="applyType">
-            <xsl:with-param name="type" select="$return" />
-        </xsl:call-template>
-        <xsl:text> </xsl:text>
+        <xsl:text> function </xsl:text>
         <xsl:value-of select="$name" />
         <xsl:text>(</xsl:text>
         <xsl:call-template name="applyParameter">
@@ -250,24 +247,11 @@
         
         <xsl:if test="not($params eq '')">
             <xsl:for-each select="tokenize($params,', ?')">
-                <xsl:call-template name="applyType">
-                    <xsl:with-param name="type" select="substring-after(., ':')" />
-                </xsl:call-template>
-                <xsl:value-of select="concat(' ', substring-before(., ':'))"/>
+                <xsl:if test="not(matches(substring-after(., ':'), $primitive_types, 'i'))"><xsl:value-of select="concat(substring-after(., ':'), ' ')"/></xsl:if>
+                <xsl:value-of select="concat('$', substring-before(., ':'))"/>
                 <xsl:if test="position() != last()">, </xsl:if>
             </xsl:for-each>
         </xsl:if>
-    </xsl:template>
-    
-    <xsl:template name="applyType">
-        <xsl:param name="type" />
-        
-        <xsl:choose>
-            <xsl:when test="$type = ''">void</xsl:when>
-            <xsl:when test="matches($type, $primitive_types, 'i')"><xsl:value-of select="lower-case($type)"/></xsl:when>
-            <xsl:otherwise><xsl:value-of select="$type"/></xsl:otherwise>
-        </xsl:choose>
-        
     </xsl:template>
 	
 </xsl:stylesheet>

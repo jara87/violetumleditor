@@ -21,6 +21,8 @@
 
 package com.horstmann.violet.framework.file.export;
 
+import com.horstmann.violet.framework.file.persistence.XStreamBasedPersistenceService;
+import com.horstmann.violet.framework.injection.resources.ResourceBundleConstant;
 import com.horstmann.violet.framework.util.ClipboardPipe;
 import com.horstmann.violet.framework.util.PDFGraphics2DStringWriter;
 import com.horstmann.violet.product.diagram.abstracts.IGraph;
@@ -30,7 +32,19 @@ import org.freehep.graphicsio.pdf.PDFGraphics2D;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 public class FileExportService
 {
@@ -120,44 +134,60 @@ public class FileExportService
      */
     public static void exportToXMI(IGraph graph, OutputStream out)
     {
-        // if (!(graph instanceof ClassDiagramGraph))
-        // {
-        // // Only exports class diagrams
-        // return;
-        // }
-        // try
-        // {
-        // // Gets xsl files
-        // ResourceBundle fileResourceBundle = ResourceBundle.getBundle(ResourceBundleConstant.FILE_STRINGS, Locale.getDefault());
-        // URL xslResource1 = FileExportService.class.getResource(fileResourceBundle.getString("files.xmi.step1.xsl"));
-        // URL xslResource2 = FileExportService.class.getResource(fileResourceBundle.getString("files.xmi.step2.xsl"));
-        // // Converts graph to Violet's XML
-        // ByteArrayOutputStream graphOut = new ByteArrayOutputStream();
-        // FileExportService.write(graph, graphOut);
-        // ByteArrayInputStream graphIn = new ByteArrayInputStream(graphOut.toByteArray());
-        // // XSL transform - step 1
-        // ByteArrayOutputStream xmiOut = new ByteArrayOutputStream();
-        // InputStream xslResource1InputStream = xslResource1.openStream();
-        // TransformerFactory factory = TransformerFactory.newInstance();
-        // Transformer transformer = factory.newTransformer(new StreamSource(xslResource1InputStream));
-        // transformer.transform(new StreamSource(graphIn), new StreamResult(xmiOut));
-        // // XSL transform - step 2
-        // ByteArrayInputStream xmiIn = new ByteArrayInputStream(xmiOut.toByteArray());
-        // InputStream xslResource2InputStream = xslResource2.openStream();
-        // transformer = factory.newTransformer(new StreamSource(xslResource2InputStream));
-        // transformer.transform(new StreamSource(xmiIn), new StreamResult(out));
-        // // Closes unused streams
-        // xslResource1InputStream.close();
-        // xslResource2InputStream.close();
-        // graphOut.close();
-        // graphIn.close();
-        // xmiOut.close();
-        // xmiIn.close();
-        // }
-        // catch (Exception e)
-        // {
-        // // Well... we tried!
-        // }
+		if (!graph.isXMIExportable()) {
+			// Only exports supported diagrams
+			return;
+		}
+ 
+		// Converts graph to Violet's XML
+		ByteArrayOutputStream graphOut = new ByteArrayOutputStream();
+		XStreamBasedPersistenceService xStreamService = new XStreamBasedPersistenceService();
+		xStreamService.write(graph, graphOut);
+		ByteArrayInputStream graphIn = new ByteArrayInputStream(graphOut.toByteArray());
+		 
+		// transform to XMI
+		convertStreamWithXSL("files.xsl.violet2xmi", graphIn, out);
+		 
+		// close streams
+		try {
+			graphOut.close();
+			graphIn.close();
+		} catch (IOException e) {
+			// Do nothing...
+		}
     }
-
+    
+    /**
+     * Convert input stream with given xsl resource to output stream.
+     * 
+     * @param xslResourceType
+     * @param in
+     * @param out
+     */
+    protected static void convertStreamWithXSL(String xslResourceType, InputStream in, OutputStream out) {
+    	try
+        {
+			// Gets xsl file
+			ResourceBundle fileResourceBundle = ResourceBundle.getBundle(
+				ResourceBundleConstant.XSL_FILES, Locale.getDefault()
+			);
+			URL xsl = FileExportService.class.getResource(
+				fileResourceBundle.getString(xslResourceType)
+			);
+			
+			// XSL transform
+			InputStream xslStream      = xsl.openStream();
+			TransformerFactory factory = TransformerFactory.newInstance();
+			Transformer transformer    = factory.newTransformer(new StreamSource(xslStream));
+			
+			transformer.transform(new StreamSource(in), new StreamResult(out));
+ 
+			// Closes unused streams
+			xslStream.close();
+        }
+        catch (Exception e)
+        {
+       	 	throw new RuntimeException(e);
+        }
+    }
 }

@@ -370,6 +370,14 @@ public abstract class AbstractGraph implements Serializable, Cloneable, IGraph
     {
         this.gridSticker = positionCorrector;
     }
+    
+    /**
+     * Make graphs not XMI exportable by default.  
+     */
+    @Override
+    public boolean isXMIExportable() {
+    	return false;
+    }
 
     private ArrayList<INode> nodes;
     private ArrayList<IEdge> edges;

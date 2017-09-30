@@ -151,6 +151,15 @@ public class FileNamingService
         ExtensionFilter filter = new ExtensionFilter(this.pdfFileTypeFilterName, this.pdfFileTypeExtension);
         return filter;
     }
+    
+    /**
+     * @return the extension filter for xmi export
+     */
+    public ExtensionFilter getXMIExtensionFilter()
+    {
+        ExtensionFilter filter = new ExtensionFilter(this.xmiFileTypeFilterName, this.xmiFileTypeExtension);
+        return filter;
+    }
 
 
     @ResourceBundleBean(key="files.pdf.name")
@@ -158,6 +167,13 @@ public class FileNamingService
 
     @ResourceBundleBean(key="files.pdf.extension")
     private String pdfFileTypeExtension;
+    
+    @ResourceBundleBean(key="files.xmi.name")
+    private String xmiFileTypeFilterName;
+
+    @ResourceBundleBean(key="files.xmi.extension")
+    private String xmiFileTypeExtension;
+
 
     @ResourceBundleBean(key="files.image.type1.name")
     private String imageFileType1FilterName;

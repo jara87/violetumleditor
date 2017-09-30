@@ -174,16 +174,18 @@ public class FileMenu extends JMenu
      */
     private void initFileExportMenu()
     {
-        initFileExportToImageItem();
-        initFileExportToClipboardItem();
-        initFileExportToPdfItem();
-        initFileExportToJavaItem();
-        initFileExportToPythonItem();
+    	this.initFileExportToImageItem();
+    	this.initFileExportToClipboardItem();
+    	this.initFileExportToPdfItem();
+    	this.initFileExportToXMIItem();
+    	this.initFileExportToJavaItem();
+    	//this.initFileExportToPythonItem();
 
         this.fileExportMenu.add(this.fileExportToImageItem);
         this.fileExportMenu.add(this.fileExportToClipBoardItem);
         this.fileExportMenu.add(this.fileExportToPdfItem);
-        // this.fileExportMenu.add(this.fileExportToJavaItem);
+        this.fileExportMenu.add(this.fileExportToXMIItem);
+        this.fileExportMenu.add(this.fileExportToJavaItem);
         // this.fileExportMenu.add(this.fileExportToPythonItem);
 
         if (this.fileChooserService == null) this.fileExportMenu.setEnabled(false);
@@ -303,6 +305,43 @@ public class FileMenu extends JMenu
                         }
                         String filename = fileSaver.getFileDefinition().getFilename();
                         workspace.getGraphFile().exportToPdf(out);
+                    }
+                    catch (IOException e1)
+                    {
+                        String message = MessageFormat.format(fileExportErrorMessage, e1.getMessage());
+                        JOptionPane.showMessageDialog(null, message, fileExportError, JOptionPane.ERROR_MESSAGE);
+                    }
+
+                }
+            }
+        });
+    }
+    
+    /**
+     * Init XMI Export action
+     */
+    private void initFileExportToXMIItem()
+    {
+        this.fileExportToXMIItem.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                IWorkspace workspace = (Workspace) mainFrame.getActiveWorkspace();
+                if (workspace != null)
+                {
+                    try {
+                        ExtensionFilter extensionFilter = fileNamingService.getXMIExtensionFilter();
+                        IFileWriter fileSaver = fileChooserService.chooseAndGetFileWriter(extensionFilter);
+                        OutputStream out = fileSaver.getOutputStream();
+                        if(null == out)
+                        {
+                            throw new IOException(
+                            	"Unable to get output stream for extension " + extensionFilter.getExtension()
+                        	);
+                        }
+                        String filename = fileSaver.getFileDefinition().getFilename();
+                        workspace.getGraphFile().exportToXMI(out);
                     }
                     catch (IOException e1)
                     {
@@ -728,6 +767,9 @@ public class FileMenu extends JMenu
 
     @ResourceBundleBean(key = "file.export_to_pdf")
     private JMenuItem fileExportToPdfItem;
+    
+    @ResourceBundleBean(key = "file.export_to_xmi")
+    private JMenuItem fileExportToXMIItem;
 
     @ResourceBundleBean(key = "file.export_to_image")
     private JMenuItem fileExportToImageItem;

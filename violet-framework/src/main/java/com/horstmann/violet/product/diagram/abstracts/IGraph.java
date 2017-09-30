@@ -156,5 +156,10 @@ public interface IGraph
      */
     public void setGridSticker(IGridSticker newCorrector);
     
-    
+    /**
+     * Define if graph is XMI exportable
+     * 
+     * @return true, if graph is XMI exportable
+     */
+    public boolean isXMIExportable();
 }

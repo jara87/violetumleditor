@@ -19,7 +19,7 @@
 				<executions>
 					<execution>
 						<id>copy</id>
-						<phase>post-clean</phase>
+						<phase>package</phase>
 						<goals>
 							<goal>copy</goal>
 						</goals>

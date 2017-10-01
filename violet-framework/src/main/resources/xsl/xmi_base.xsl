@@ -7,6 +7,85 @@
 	xmlns:xmi="http://schema.omg.org/spec/XMI/2.5.1"
     xmlns:uml = "http://schema.omg.org/spec/UML/2.5"
 >
+	<!-- *************************************************************************************** -->
+	<!--                                                                                         -->
+    <!-- XMI Base file                                                                           -->
+	<!--                                                                                         -->
+    <!-- This file is the basic code generation file. It converts XMI 2.5 (with UML 2.5) files   -->
+	<!-- to code.                                                                                -->
+	<!-- To do this, it collects the information of given xmi file and call xsl templates with   -->
+	<!-- parameter to generate the code. You only have to include this document in your xslt     -->
+	<!-- file and define the called xsl templates with your language specific code generation.   -->
+    <!--                                                                                         -->
+    <!-- To include this file, please add the xsl:include tag at hte begining of your            -->
+	<!-- stylesheet:                                                                             -->
+    <!--                                                                                         -->
+    <!--     <xsl:include href="xmi_base.xsl" />                                                 -->
+    <!--                                                                                         -->
+	<!-- Now you have to define following xsl templates for code generation:                     -->
+	<!--                                                                                         -->
+	<!--                                                                                         
+			<xsl:template name="file_name">
+				<xsl:param name="path" />
+				<xsl:param name="name" />
+			</xsl:template>
+	
+			<xsl:template name="file_header">
+				<xsl:param name="class_name"   />
+				<xsl:param name="description"  />
+				<xsl:param name="project_name" />
+				<xsl:param name="author"       />
+				<xsl:param name="copyright"    />
+				<xsl:param name="url"          />
+			</xsl:template>
+			
+			<xsl:template name="file_footer">
+			</xsl:template>
+			
+			<xsl:template name="package_definition">
+				<xsl:param name="package_name" />
+            </xsl:template>
+			
+			<xsl:template name="include_definition">
+				<xsl:param name="classes" />
+			</xsl:template>
+			
+			<xsl:template name="class_header">
+				<xsl:param name="class_name"  />
+				<xsl:param name="description" />
+        	</xsl:template>
+    
+			<xsl:template name="class_definition">
+				<xsl:param name="class_name" />
+				<xsl:param name="type"       />
+				<xsl:param name="abstract"   />
+				<xsl:param name="extends"    />
+				<xsl:param name="implements" />
+			</xsl:template>
+    
+			<xsl:template name="class_footer">
+			</xsl:template>
+	
+			<xsl:template name="attribute_definition">
+				<xsl:param name="name"        />
+				<xsl:param name="type"        />
+				<xsl:param name="description" />
+				<xsl:param name="visibility"  />
+			</xsl:template>
+	
+			<xsl:template name="method_definition">
+				<xsl:param name="name"        />
+				<xsl:param name="return"      />
+				<xsl:param name="params"      />
+				<xsl:param name="abstract"    />
+				<xsl:param name="description" />
+				<xsl:param name="visibility"  />
+				<xsl:param name="type"        />
+			</xsl:template>
+	-->
+    <!-- *************************************************************************************** -->
+    
+
     <!-- *************************************************************************************** -->
 	<!--                                                                                         -->
     <!-- Global variable definition                                                              -->
@@ -23,11 +102,12 @@
     <!--                                                                                         -->
     <!-- *************************************************************************************** -->
     
+    <xsl:param name="out"          >.</xsl:param>
     <xsl:param name="project_name" >${project.name}</xsl:param>
     <xsl:param name="author"       >${author}</xsl:param>
     <xsl:param name="copyright"    >${copyright}</xsl:param>
     <xsl:param name="url"          >${url}</xsl:param>
-    <xsl:param name="main_package" >Test</xsl:param>
+    <xsl:param name="main_package" />
     
     
     <!-- *************************************************************************************** -->
@@ -84,7 +164,7 @@
         
         <xsl:message>Generate file: <xsl:value-of select="$file_name" /></xsl:message>
         
-		<xsl:result-document href="./{$file_name}" method="text">
+		<xsl:result-document href="{$out}/{$file_name}" method="text">
 			<xsl:call-template name="file_header">
 				<xsl:with-param name="class_name"   select="$element/@name"/>
 				<xsl:with-param name="project_name" select="$project_name"/>

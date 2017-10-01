@@ -156,6 +156,22 @@
 		</xsl:choose>
 	</xsl:template>
 	
+	<!-- search for class or interface comments -->
+	<xsl:template name="applyNotes">
+		<xsl:param name="id" />
+		
+		<xsl:choose>
+			<xsl:when test="count($root/edges/NoteEdge[endNode/@reference = $id]) &gt; 0">
+				<xsl:variable name="edge" select="$root/edges/NoteEdge[endNode/@reference = $id]" />
+				<ownedComment>
+					<xsl:attribute name="xmi:id"><xsl:value-of select="$edge/@id" /></xsl:attribute>
+					<xsl:attribute name="xmi:type">uml:Comment</xsl:attribute>
+					<xsl:attribute name="body"><xsl:value-of select="$root/nodes/NoteNode[@id = $edge/startNode/@reference]/text/text" /></xsl:attribute>
+				</ownedComment>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+	
 	
 	<!-- apply Realization -->
 	<xsl:template name="applyRealization">
@@ -192,11 +208,13 @@
 				</xsl:when>
 				<xsl:when test="contains($type,'Interface')" >
 					<xsl:call-template name="applyGeneralization"><xsl:with-param name="id" select="@id" /></xsl:call-template>
+					<xsl:call-template name="applyNotes"><xsl:with-param name="id" select="@id" /></xsl:call-template>
 					<xsl:apply-templates select="attributes" />
 					<xsl:apply-templates select="methods" />
 				</xsl:when>
 				<xsl:when test="contains($type,'Class')" >
 					<xsl:call-template name="applyGeneralization"><xsl:with-param name="id" select="@id" /></xsl:call-template>
+					<xsl:call-template name="applyNotes"><xsl:with-param name="id" select="@id" /></xsl:call-template>
 					<xsl:apply-templates select="attributes" />
 					<xsl:apply-templates select="methods" />
 				</xsl:when>

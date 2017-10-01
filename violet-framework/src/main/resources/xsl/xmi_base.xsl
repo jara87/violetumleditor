@@ -165,6 +165,12 @@
 			</xsl:call-template>        
         </xsl:variable>
         
+		<xsl:variable name="description">
+			<xsl:if test="count($element/ownedComment) &gt; 0">
+				<xsl:value-of select="$element/ownedComment/@body" />
+			</xsl:if>
+        </xsl:variable>
+		
         <!--xsl:message>Generate file: <xsl:value-of select="$file_name" /></xsl:message-->
         
 		<xsl:result-document href="{$file_name}" method="text">
@@ -174,6 +180,7 @@
 				<xsl:with-param name="author"       select="$author"/>
 				<xsl:with-param name="copyright"    select="$copyright"/>
 				<xsl:with-param name="url"          select="$url"/>
+				<xsl:with-param name="description"  select="$description" />
 			</xsl:call-template>
 			
 			<xsl:call-template name="package_definition">
@@ -189,7 +196,7 @@
 			</xsl:call-template>
 			
 			<xsl:call-template name="createClass">
-				<xsl:with-param name="element" select="$element" />
+				<xsl:with-param name="element"      select="$element" />
 			</xsl:call-template>
 			
 			<xsl:call-template name="file_footer" />
@@ -229,9 +236,16 @@
     <xsl:template name="createClass">
         <xsl:param name="element" />
         
+		<!-- get description -->
+		<xsl:variable name="description">
+			<xsl:if test="count($element/ownedComment) &gt; 0">
+				<xsl:value-of select="$element/ownedComment/@body" />
+			</xsl:if>
+        </xsl:variable>
+		
         <xsl:call-template name="class_header">
-            <xsl:with-param name="class_name" select="$element/@name" />
-            <!-- TODO: Support description -->
+            <xsl:with-param name="class_name"  select="$element/@name" />
+            <xsl:with-param name="description" select="$description" />
         </xsl:call-template>
         
         <!-- get generalisation -->
@@ -253,7 +267,7 @@
                 </xsl:for-each>
             </xsl:if>        
         </xsl:variable>
-        
+		
 		<!-- call class definition template -->
         <xsl:call-template name="class_definition">
             <xsl:with-param name="class_name" select="$element/@name" />
@@ -266,7 +280,6 @@
             </xsl:with-param>
             <xsl:with-param name="extends"    select="$extends" />
             <xsl:with-param name="implements" select="$implements" />
-            <!-- TODO: Support description -->
         </xsl:call-template>
         
         <xsl:apply-templates select="$element/ownedAttribute" />

@@ -216,6 +216,7 @@
 				<xsl:attribute name="xmi:id"><xsl:value-of select="generate-id($line)" /></xsl:attribute>
 				<xsl:call-template name="setName"><xsl:with-param name="name" select="$line" /></xsl:call-template>
 				<xsl:call-template name="setVisibility"><xsl:with-param name="name" select="$line" /></xsl:call-template>
+				<xsl:call-template name="setStatic"><xsl:with-param name="name" select="$line" /></xsl:call-template>
 				<xsl:call-template name="setType">
 					<xsl:with-param name="name" select="$line" />
 					<xsl:with-param name="package_name" select="$package_name" />
@@ -236,6 +237,7 @@
 				<xsl:call-template name="setName"><xsl:with-param name="name" select="$line" /></xsl:call-template>
 				<xsl:call-template name="setVisibility"><xsl:with-param name="name" select="$line" /></xsl:call-template>
 				<xsl:call-template name="setAbstract"><xsl:with-param name="name" select="$line" /></xsl:call-template>
+				<xsl:call-template name="setStatic"><xsl:with-param name="name" select="$line" /></xsl:call-template>
 				<xsl:call-template name="applyParameter">
 					<xsl:with-param name="line" select="$line" />
 					<xsl:with-param name="package_name" select="$package_name" />
@@ -436,6 +438,19 @@
             </xsl:when>
             <xsl:otherwise>
 				<xsl:attribute name="isAbstract">false</xsl:attribute>
+			</xsl:otherwise>
+        </xsl:choose> 
+	</xsl:template>
+	
+	<!-- set isStatic attribute, if name contains <<static>> !-->
+	<xsl:template name="setStatic">
+		<xsl:param name="name" />
+		<xsl:choose >
+        	<xsl:when test = "contains($name,'&lt;&lt;static&gt;&gt;')" >
+            	<xsl:attribute name="isStatic">true</xsl:attribute>
+            </xsl:when>
+            <xsl:otherwise>
+				<xsl:attribute name="isStatic">false</xsl:attribute>
 			</xsl:otherwise>
         </xsl:choose> 
 	</xsl:template>

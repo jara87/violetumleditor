@@ -145,9 +145,10 @@
 	
     <!-- Attribute definition -->
 	<xsl:template name="attribute_definition">
-        <xsl:param name="name" />
-        <xsl:param name="type" />
+        <xsl:param name="name"        />
+        <xsl:param name="type"        />
         <xsl:param name="description" />
+        <xsl:param name="static"      />
         <xsl:param name="visibility" select="private" />
 		
         <xsl:text>&nl;</xsl:text>
@@ -164,16 +165,18 @@
         <xsl:if test="not($visibility eq '')">
             <xsl:value-of select="$visibility" /><xsl:text> </xsl:text>
         </xsl:if>
+        <xsl:if test="$static   = 'true'"><xsl:text>static </xsl:text></xsl:if>
         <xsl:text>$</xsl:text><xsl:value-of select="$name" />
         <xsl:text>;&nl;</xsl:text>
 	</xsl:template>
 	
     <!-- Method definition -->
 	<xsl:template name="method_definition">
-        <xsl:param name="name" />
-        <xsl:param name="return" />
-        <xsl:param name="params" />
-        <xsl:param name="abstract" />
+        <xsl:param name="name"        />
+        <xsl:param name="return"      />
+        <xsl:param name="params"      />
+        <xsl:param name="abstract"    />
+        <xsl:param name="static"      />
         <xsl:param name="description" />
         <xsl:param name="visibility" select="public" />
         <xsl:param name="type"       select="class" />
@@ -192,9 +195,11 @@
         </xsl:if>
         <xsl:text>     */&nl;</xsl:text>
         <xsl:text>    </xsl:text>
-        <xsl:if test="$abstract = 'true'"><xsl:text>abstract </xsl:text></xsl:if>
         <xsl:value-of select="$visibility" />
-        <xsl:text> function </xsl:text>
+		<xsl:text> </xsl:text>
+        <xsl:if test="$abstract = 'true'"><xsl:text>abstract </xsl:text></xsl:if>
+        <xsl:if test="$static   = 'true'"><xsl:text>static </xsl:text></xsl:if>
+        <xsl:text>function </xsl:text>
         <xsl:value-of select="$name" />
         <xsl:text>(</xsl:text>
         <xsl:call-template name="applyParameter">

@@ -71,6 +71,7 @@
 				<xsl:param name="type"        />
 				<xsl:param name="description" />
 				<xsl:param name="visibility"  />
+				<xsl:param name="static"      />
 			</xsl:template>
 	
 			<xsl:template name="method_definition">
@@ -78,6 +79,7 @@
 				<xsl:param name="return"      />
 				<xsl:param name="params"      />
 				<xsl:param name="abstract"    />
+				<xsl:param name="static"      />
 				<xsl:param name="description" />
 				<xsl:param name="visibility"  />
 				<xsl:param name="type"        />
@@ -290,6 +292,7 @@
 			<xsl:with-param name="name"       select="$element/@name" />
 			<xsl:with-param name="type"       select="$type" />
 			<xsl:with-param name="visibility" select="$element/@visibility" />
+			<xsl:with-param name="static"     select="$element/@isStatic" />
 			<xsl:with-param name="description"></xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>
@@ -332,6 +335,7 @@
 			<xsl:with-param name="name"       select="$element/@name" />
 			<xsl:with-param name="visibility" select="$element/@visibility" />
 			<xsl:with-param name="abstract"   select="$element/@isAbstract" />
+			<xsl:with-param name="static"     select="$element/@isStatic" />
 			<xsl:with-param name="type"       select="$type" />
 			<xsl:with-param name="return"     select="$return" />
 			<xsl:with-param name="params"     select="$params" />

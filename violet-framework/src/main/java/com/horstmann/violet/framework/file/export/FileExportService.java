@@ -167,6 +167,12 @@ public class FileExportService
     protected static void convertStreamWithXSL(String xslResourceType, InputStream in, OutputStream out) {
     	try
         {
+    		// Configure JAXP to use saxon
+    		System.setProperty(
+    			"javax.xml.transform.TransformerFactory", 
+    			"net.sf.saxon.TransformerFactoryImpl"
+    		);
+    		
 			// Gets xsl file
 			ResourceBundle fileResourceBundle = ResourceBundle.getBundle(
 				ResourceBundleConstant.XSL_FILES, Locale.getDefault()

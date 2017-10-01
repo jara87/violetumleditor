@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -314,18 +315,18 @@ public class GraphFile implements IGraphFile
      * 
      */
     @Override
-    public void exportToPHP(OutputStream out)
+    public void exportToPHP(Properties config)
     {
-        FileExportService.exportToXMI(graph, out);
+        FileExportService.exportToPHP(graph, config);
     }
     
     /**
      * 
      */
     @Override
-    public void exportToJava(OutputStream out)
+    public void exportToJava(Properties config)
     {
-        FileExportService.exportToXMI(graph, out);
+        FileExportService.exportToJava(graph, config);
     }
 
     @Override

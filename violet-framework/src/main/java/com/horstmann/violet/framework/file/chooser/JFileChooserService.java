@@ -211,6 +211,29 @@ public class JFileChooserService implements IFileChooserService
         return fsh;
     }    
     
+    /**
+     * Returns directory from directory selection dialog.
+     */
+    @Override
+    public File chooseAndGetDirectory() {
+    	JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(this.currentDirectory);
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        
+        int response = fileChooser.showOpenDialog(null);
+        if (response == JFileChooser.APPROVE_OPTION) {
+        	this.currentDirectory = fileChooser.getCurrentDirectory();
+        	return fileChooser.getSelectedFile();
+        }
+        
+        if (response == JFileChooser.CANCEL_OPTION) {
+        	this.currentDirectory = fileChooser.getCurrentDirectory();
+        }
+        
+        return null;
+    }
+    
 
     @InjectedBean
     private UserPreferencesService userPreferencesService;

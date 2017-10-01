@@ -102,7 +102,7 @@
     <!--                                                                                         -->
     <!-- *************************************************************************************** -->
     
-    <xsl:param name="out"          >.</xsl:param>
+    <xsl:param name="path"         >.</xsl:param>
     <xsl:param name="project_name" >${project.name}</xsl:param>
     <xsl:param name="author"       >${author}</xsl:param>
     <xsl:param name="copyright"    >${copyright}</xsl:param>
@@ -156,6 +156,7 @@
         </xsl:variable>
 		
 		<xsl:variable name="file_name">
+			<xsl:if test="not($path = '')"><xsl:value-of select="$path" />/</xsl:if>
             <xsl:call-template name="file_name">
 				<xsl:with-param name="path" select="$package"    />
 				<xsl:with-param name="name" select="$element/@name" />
@@ -164,7 +165,7 @@
         
         <xsl:message>Generate file: <xsl:value-of select="$file_name" /></xsl:message>
         
-		<xsl:result-document href="{$out}/{$file_name}" method="text">
+		<xsl:result-document href="{$file_name}" method="text">
 			<xsl:call-template name="file_header">
 				<xsl:with-param name="class_name"   select="$element/@name"/>
 				<xsl:with-param name="project_name" select="$project_name"/>

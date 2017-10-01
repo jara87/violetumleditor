@@ -31,12 +31,15 @@ import java.awt.event.FocusListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.text.MessageFormat;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Properties;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -125,6 +128,7 @@ public class FileMenu extends JMenu
         initFileSaveItem();
         initFileSaveAsItem();
         initFileExportMenu();
+        initCodeGenerationMenu();
         initFilePrintItem();
         initFileExitItem();
 
@@ -135,6 +139,7 @@ public class FileMenu extends JMenu
         this.add(this.fileSaveItem);
         this.add(this.fileSaveAsItem);
         this.add(this.fileExportMenu);
+        this.add(this.codeGenerationMenu);
         this.add(this.filePrintItem);
         this.add(this.fileExitItem);
 
@@ -178,51 +183,28 @@ public class FileMenu extends JMenu
     	this.initFileExportToClipboardItem();
     	this.initFileExportToPdfItem();
     	this.initFileExportToXMIItem();
-    	this.initFileExportToJavaItem();
-    	//this.initFileExportToPythonItem();
-
+    	
         this.fileExportMenu.add(this.fileExportToImageItem);
         this.fileExportMenu.add(this.fileExportToClipBoardItem);
         this.fileExportMenu.add(this.fileExportToPdfItem);
         this.fileExportMenu.add(this.fileExportToXMIItem);
-        this.fileExportMenu.add(this.fileExportToJavaItem);
-        // this.fileExportMenu.add(this.fileExportToPythonItem);
-
+        
         if (this.fileChooserService == null) this.fileExportMenu.setEnabled(false);
     }
-
+    
     /**
-     * Init export to python menu entry
+     * Init code generation sub menu
+     * @param parent
      */
-    private void initFileExportToPythonItem()
-    {
-        this.fileExportToPythonItem.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                IWorkspace workspace = (Workspace) mainFrame.getActiveWorkspace();
-                if (workspace != null)
-                {
-                }
-            }
-        });
-    }
-
-    /**
-     * Init export to java menu entry
-     */
-    private void initFileExportToJavaItem()
-    {
-        this.fileExportToJavaItem.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                IWorkspace workspace = (Workspace) mainFrame.getActiveWorkspace();
-                if (workspace != null)
-                {
-                }
-            }
-        });
+    private void initCodeGenerationMenu() {
+    	
+    	this.initFileExportToPHPItem();
+    	this.initFileExportToJavaItem();
+    	
+    	this.codeGenerationMenu.add(this.fileExportToPHPItem);
+    	this.codeGenerationMenu.add(this.fileExportToJavaItem);
+    	    	
+    	if (this.fileChooserService == null) this.codeGenerationMenu.setEnabled(false);
     }
 
     /**
@@ -349,6 +331,64 @@ public class FileMenu extends JMenu
                         JOptionPane.showMessageDialog(null, message, fileExportError, JOptionPane.ERROR_MESSAGE);
                     }
 
+                }
+            }
+        });
+    }
+    
+    /**
+     * Init PHP Export action
+     */
+    private void initFileExportToPHPItem()
+    {
+        this.fileExportToPHPItem.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                IWorkspace workspace = (Workspace) mainFrame.getActiveWorkspace();
+                if (workspace != null)
+                {
+                	File directory = fileChooserService.chooseAndGetDirectory();
+                    if(null != directory) {
+                    	Properties config = new Properties();
+                    	try {
+							config.setProperty("path", directory.toURI().toURL().toString());
+						} catch (MalformedURLException e1) {
+							// Do nothing...
+						}
+                    	
+                    	workspace.getGraphFile().exportToPHP(config);
+                    }
+                }
+            }
+        });
+    }
+    
+    /**
+     * Init PHP Export action
+     */
+    private void initFileExportToJavaItem()
+    {
+        this.fileExportToJavaItem.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                IWorkspace workspace = (Workspace) mainFrame.getActiveWorkspace();
+                if (workspace != null)
+                {
+                	File directory = fileChooserService.chooseAndGetDirectory();
+                    if(null != directory) {
+                    	Properties config = new Properties();
+                    	try {
+							config.setProperty("path", directory.toURI().toURL().toString());
+						} catch (MalformedURLException e1) {
+							// Do nothing...
+						}
+                    	
+                    	workspace.getGraphFile().exportToJava(config);
+                    }
                 }
             }
         });
@@ -777,14 +817,17 @@ public class FileMenu extends JMenu
     @ResourceBundleBean(key = "file.export_to_clipboard")
     private JMenuItem fileExportToClipBoardItem;
 
-    @ResourceBundleBean(key = "file.export_to_java")
-    private JMenuItem fileExportToJavaItem;
-
-    @ResourceBundleBean(key = "file.export_to_python")
-    private JMenuItem fileExportToPythonItem;
-
     @ResourceBundleBean(key = "file.export")
     private JMenu fileExportMenu;
+    
+    @ResourceBundleBean(key = "file.generate_to_php")
+    private JMenuItem fileExportToPHPItem;
+    
+    @ResourceBundleBean(key = "file.generate_to_java")
+    private JMenuItem fileExportToJavaItem;
+    
+    @ResourceBundleBean(key = "file.generate")
+    private JMenu codeGenerationMenu;
 
     @ResourceBundleBean(key = "file.print")
     private JMenuItem filePrintItem;

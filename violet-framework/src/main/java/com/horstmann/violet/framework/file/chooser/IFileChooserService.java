@@ -21,6 +21,7 @@
 
 package com.horstmann.violet.framework.file.chooser;
 
+import java.io.File;
 import java.io.IOException;
 
 import com.horstmann.violet.framework.file.IFile;
@@ -80,5 +81,12 @@ public interface IFileChooserService
      * @throws IOException
      */
     public IFileWriter getFileWriter(IFile file) throws IOException;
+    
+    /**
+     * Returns directory from directory selection dialog.
+     * 
+     * @return selected directory or null, if user abort operation
+     */
+    public File chooseAndGetDirectory();
 
 }

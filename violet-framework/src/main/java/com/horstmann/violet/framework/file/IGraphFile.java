@@ -1,6 +1,7 @@
 package com.horstmann.violet.framework.file;
 
 import java.io.OutputStream;
+import java.util.Properties;
 
 import com.horstmann.violet.product.diagram.abstracts.IGraph;
 
@@ -78,18 +79,18 @@ public interface IGraphFile extends IFile
     public void exportToXMI(OutputStream out);
 
     /**
-     * Exports the current graph to a PHP file.
+     * Exports the current graph to a PHP file with given config.
      * 
-     * @param out
+     * @param config
      */
-    public void exportToPHP(OutputStream out);
+    public void exportToPHP(Properties config);
     
     /**
      * Exports the current graph to a Java file.
      * 
-     * @param out
+     * @param config
      */
-    public void exportToJava(OutputStream out);
+    public void exportToJava(Properties config);
     
     /**
      * Prints the graph

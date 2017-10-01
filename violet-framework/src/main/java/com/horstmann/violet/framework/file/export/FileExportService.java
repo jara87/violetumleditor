@@ -273,7 +273,6 @@ public class FileExportService
 				}
 				
 				for (Map.Entry<Object, Object> e : config.entrySet()) {
-					System.out.println("Add " + e.getKey() + " with " + e.getValue());
 					transformer.setParameter((String) e.getKey(), (String) e.getValue());
 				}
 			}

@@ -163,7 +163,7 @@
 			</xsl:call-template>        
         </xsl:variable>
         
-        <xsl:message>Generate file: <xsl:value-of select="$file_name" /></xsl:message>
+        <!--xsl:message>Generate file: <xsl:value-of select="$file_name" /></xsl:message-->
         
 		<xsl:result-document href="{$file_name}" method="text">
 			<xsl:call-template name="file_header">
